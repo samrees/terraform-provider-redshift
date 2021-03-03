@@ -1,16 +1,20 @@
 # Terraform Redshift Provider
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/076b7e35151040f1802b500f218950d1)](https://www.codacy.com/app/frankfarrell/terraform-provider-redshift?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=frankfarrell/terraform-provider-redshift&amp;utm_campaign=Badge_Grade)
-[![Build Status](https://travis-ci.org/frankfarrell/terraform-provider-redshift.svg?branch=master)](https://travis-ci.org/frankfarrell/terraform-provider-redshift)
-[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/terraform-redshift-provider)
+[![Build Status](https://github.com/coopergillan/terraform-provider-redshift/actions/workflows/go.yml/badge.svg)
 
-Manage Redshift users, groups, privileges, databases and schemas. It runs the SQL queries necessary to manage these (CREATE USER, DELETE DATABASE etc)
-in transactions, and also reads the state from the tables that store this state, eg `pg_user_info`, `pg_group` etc. The underlying tables are more or less equivalent to the postgres tables,
-but some tables are not accessible in Redshift.
+Manage Redshift users, groups, privileges, databases and schemas. It runs the
+SQL queries necessary to manage these (CREATE USER, DELETE DATABASE etc) in
+transactions, and also reads the state from the tables that store this state,
+eg `pg_user_info`, `pg_group` etc. The underlying tables are more or less
+equivalent to the postgres tables, but some tables are not accessible in
+Redshift.
 
-Currently supports users, groups, schemas and databases. You can set privileges for groups on schemas. Per user schema privileges will be added at a later date.
+Currently supports users, groups, schemas and databases. You can set privileges
+for groups on schemas. Per user schema privileges will be added at a later
+date.
 
-Note that schemas are the lowest level of granularity here. Tables should be created by some other tool, for instance flyway.
+Note that schemas are the lowest level of granularity here. Tables should be
+created by some other tool, for instance flyway.
 
 # Get it:
 
@@ -85,9 +89,12 @@ resource "redshift_group_schema_privilege" "testgroup_testchema_privileges" {
 }
 ```
 
-You can only create resources in the db configured in the provider block. Since you cannot configure providers with the output of resources,
-if you want to create a db and configure resources you will need to configure it through a `terraform_remote_state` data provider. Even if you
-specifiy the name directly rather than as a variable, since providers are configured before resources you will need to have them in separate projects.
+You can only create resources in the db configured in the provider block. Since
+you cannot configure providers with the output of resources, if you want to
+create a db and configure resources you will need to configure it through a
+`terraform_remote_state` data provider. Even if you specifiy the name directly
+rather than as a variable, since providers are configured before resources you
+will need to have them in separate projects.
 
 ### First file:
 
@@ -137,8 +144,10 @@ resource "redshift_user" "testuser" {
 ### Limitations
 For authoritative limitations, please see [the Redshift documentation](https://docs.aws.amazon.com/redshift/index.html).
 1) You cannot delete the database you are currently connected to.
-2) You cannot set table specific privileges since this provider is table agnostic (for now, if you think it would be feasible to manage tables let me know)
-3) On importing a user, it is impossible to read the password (or even the md hash of the password, since Redshift restricts access to pg_shadow)
+2) You cannot set table-specific privileges since, for now,  this provider is
+table-agnostic
+3) On importing a user, it is impossible to read the password (or even the md
+hash of the password, since Redshift restricts access to pg_shadow)
 
 ### I usually connect through an ssh tunnel, what do I do?
 The easiest thing is probably to update your hosts file so that the url resolves to localhost
@@ -148,6 +157,20 @@ The easiest thing is probably to update your hosts file so that the url resolves
 ### Prequisites to development
 1. [Go installed](https://golang.org/dl/)
 2. [Terraform installed locally](https://www.terraform.io/downloads.html)
+
+### Testing
+
+Run the tests
+
+```bash
+make test
+```
+
+Find unchecked errors
+
+```bash
+make errcheck
+```
 
 ### Building
 Run `make dist` to generate binaries for the supported os/architectures. This
@@ -182,7 +205,6 @@ git push $(cat VERSION)
 ```
 
 Navigate to the [project tag](https://github.com/coopergillan/terraform-provider-redshift/tags) to edit the release. Add the compiled binaries and publish the release.
-
 
 ## TODO
 1. Database property for Schema
