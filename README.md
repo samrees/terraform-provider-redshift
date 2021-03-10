@@ -1,6 +1,6 @@
 # Terraform Redshift Provider
 
-[![Build Status](https://github.com/coopergillan/terraform-provider-redshift/actions/workflows/go.yml/badge.svg)
+![Build Status](https://github.com/coopergillan/terraform-provider-redshift/actions/workflows/go.yml/badge.svg)
 
 Manage Redshift users, groups, privileges, databases and schemas. It runs the
 SQL queries necessary to manage these (CREATE USER, DELETE DATABASE etc) in
@@ -36,8 +36,8 @@ See [original fork](https://github.com/frankfarrell/terraform-provider-redshift)
 
 ```terraform
 provider redshift {
-  url = "localhost"
-  user = "testroot"
+  url      = "localhost"
+  user     = "testroot"
   password = "Rootpass123"
   database = "dev"
 }
@@ -49,14 +49,14 @@ Creating an admin user who is in a group and who owns a new database, with a pas
 
 ```terraform
 resource "redshift_user" "testuser"{
-  username = "testusernew" # User names are not immutable.
+  username         = "testusernew" # User names are not immutable.
   # Terraform can't read passwords, so if the user changes their password it will not be picked up. One caveat is that when the user name is changed, the password is reset to this value
-  password = "Testpass123" # You can pass an md5 encryted password here by prefixing the hash with md5
-  valid_until = "2018-10-30" # See below for an example with 'password_disabled'
+  password         = "Testpass123" # You can pass an md5 encryted password here by prefixing the hash with md5
+  valid_until      = "2018-10-30" # See below for an example with 'password_disabled'
   connection_limit = "4"
-  createdb = true
-  syslog_access = "UNRESTRICTED"
-  superuser = true
+  createdb         = true
+  syslog_access    = "UNRESTRICTED"
+  superuser        = true
 }
 ```
 
@@ -65,7 +65,7 @@ resource "redshift_user" "testuser"{
 ```terraform
 resource "redshift_group" "testgroup" {
   group_name = "testgroup" # Group names are not immutable
-  users = ["${redshift_user.testuser.id}"] # A list of user ids as output by terraform (from the pg_user_info table), not a list of usernames (they are not immnutable)
+  users      = ["${redshift_user.testuser.id}"] # A list of user ids as output by terraform (from the pg_user_info table), not a list of usernames (they are not immnutable)
 }
 ```
 
@@ -73,10 +73,10 @@ resource "redshift_group" "testgroup" {
 
 ```terraform
 resource "redshift_schema" "testschema" {
-  schema_name = "testschema"  # Schema names are not immutable
-  owner = "${redshift_user.testuser.id}"  # This defaults to the current user (eg as specified in the provider config) if empty
+  schema_name       = "testschema"  # Schema names are not immutable
+  owner             = "${redshift_user.testuser.id}"  # This defaults to the current user (eg as specified in the provider config) if empty
   cascade_on_delete = true
-  quota = 2048  # in MB
+  quota             = 2048  # in MB
 }
 ```
 
@@ -87,13 +87,13 @@ Redshift minimums][redshift-schema-parameters].
 
 ```terraform
 resource "redshift_group_schema_privilege" "testgroup_testchema_privileges" {
-  schema_id = "${redshift_schema.testschema.id}" # Id rather than group name
-  group_id = "${redshift_group.testgroup.id}" # Id rather than group name
-  select = true
-  insert = true
-  update = false
+  schema_id  = "${redshift_schema.testschema.id}" # Id rather than group name
+  group_id   = "${redshift_group.testgroup.id}" # Id rather than group name
+  select     = true
+  insert     = true
+  update     = false
   references = true
-  delete = false # False values are optional
+  delete     = false # False values are optional
 }
 ```
 
@@ -108,8 +108,8 @@ will need to have them in separate projects.
 
 ```terraform
 resource "redshift_database" "testdb" {
-  database_name = "testdb"  # This isn't immutable
-  owner = "${redshift_user.testuser.id}"
+  database_name    = "testdb"  # This isn't immutable
+  owner            = "${redshift_user.testuser.id}"
   connection_limit = "4"
 }
 
@@ -122,17 +122,17 @@ output "testdb_name" {
 
 ```terraform
 data "terraform_remote_state" "redshift" {
-  backend = "s3"
-  config = {
+  backend  = "s3"
+  config   = {
     bucket = "somebucket"
-    key = "somekey"
+    key    = "somekey"
     region = "us-east-1"
   }
 }
 
 provider redshift {
-  url = "localhost"
-  user = "testroot"
+  url      = "localhost"
+  user     = "testroot"
   password = "Rootpass123"
   database = "${data.terraform_remote_state.redshift.testdb_name}"
 }
@@ -142,9 +142,9 @@ provider redshift {
 
 ```terraform
 resource "redshift_user" "testuser" {
-  username = "testusernew"
+  username          = "testusernew"
   password_disabled = true # No need to specify a password if this is true
-  connection_limit = "1"
+  connection_limit  = "1"
 }
 ```
 
