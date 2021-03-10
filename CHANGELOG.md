@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## 2.0.0
+
+ - Bump to version 2.0.0 (Cooper Gillan)
+ - A little more README cleanup (Cooper Gillan)
+ - Add support for schema quotas (#20) (Raymond Berg)
+ - Clean up other HCL examples and add comments (#25) (Cooper Gillan)
+ - GH-22 - Run builds for multiple OS's and Go versions (#24) (Cooper Gillan)
+ - Update module names to reference fork for building (#21) (Cooper Gillan)
+ - Clean up README more (#18) (Cooper Gillan)
+ - GH-7 - Update downloads info in README (#10) (Cooper Gillan)
+ - GH-6 Add errcheck_excludes file and update check (#8) (Cooper Gillan)
+ - Add Github actions for pull request and push (#5) (Cooper Gillan)
+ - Clean up and tweak the docs (#4) (Cooper Gillan)
+
+
 ## 1.0.0
 
  - Don't include binaries in version control (Raymond Berg)
