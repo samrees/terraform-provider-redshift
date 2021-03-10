@@ -20,8 +20,8 @@ builds:
     - darwin
   goarch:
     - amd64
-  ignore: {}
-  binary: '{{ .ProjectName }}_v{{ .Version }}_x4'
+  ignore: []
+  binary: '{{ .ProjectName }}_v{{ .Version }}'
 archives:
 - format: zip
   name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
