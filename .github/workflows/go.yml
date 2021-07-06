@@ -9,19 +9,16 @@ on:
 jobs:
 
   format_test_and_build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         go-version:
-          - 1.12
           - 1.13
           - 1.14
           - 1.15
-          - 1.16
         os:
           - macos-latest
           - ubuntu-latest
-          - windows-latest
     steps:
     - uses: actions/checkout@v2
 
