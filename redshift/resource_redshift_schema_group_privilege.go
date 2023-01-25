@@ -246,11 +246,11 @@ func readRedshiftSchemaGroupPrivilege(d *schema.ResourceData, tx *sql.Tx) error 
 
 	var hasPrivilegeQuery = `
 			select
-			decode(charindex('r',split_part(split_part(array_to_string(defaclacl, '|'),'group ' || pu.groname,2 ) ,'/',1)),0,0,1)  as select,
-			decode(charindex('w',split_part(split_part(array_to_string(defaclacl, '|'),'group ' || pu.groname,2 ) ,'/',1)),0,0,1)  as update,
-			decode(charindex('a',split_part(split_part(array_to_string(defaclacl, '|'),'group ' || pu.groname,2 ) ,'/',1)),0,0,1)  as insert,
-			decode(charindex('d',split_part(split_part(array_to_string(defaclacl, '|'),'group ' || pu.groname,2 ) ,'/',1)),0,0,1)  as delete,
-			decode(charindex('x',split_part(split_part(array_to_string(defaclacl, '|'),'group ' || pu.groname,2 ) ,'/',1)),0,0,1)  as references
+			cast(bool_or(decode(charindex('r',split_part(split_part(array_to_string(defaclacl, '|'),'group ' || pu.groname,2 ) ,'/',1)),0,0,1)) as int)  as select,
+			cast(bool_or(decode(charindex('w',split_part(split_part(array_to_string(defaclacl, '|'),'group ' || pu.groname,2 ) ,'/',1)),0,0,1)) as int)  as update,
+			cast(bool_or(decode(charindex('a',split_part(split_part(array_to_string(defaclacl, '|'),'group ' || pu.groname,2 ) ,'/',1)),0,0,1)) as int)  as insert,
+			cast(bool_or(decode(charindex('d',split_part(split_part(array_to_string(defaclacl, '|'),'group ' || pu.groname,2 ) ,'/',1)),0,0,1)) as int)  as delete,
+			cast(bool_or(decode(charindex('x',split_part(split_part(array_to_string(defaclacl, '|'),'group ' || pu.groname,2 ) ,'/',1)),0,0,1)) as int)  as references
 			from pg_group pu, pg_default_acl acl, pg_namespace nsp
 			where acl.defaclnamespace = nsp.oid and
 			array_to_string(acl.defaclacl, '|') LIKE '%' || 'group ' || pu.groname || '=%'
